@@ -1,19 +1,18 @@
-use std::collections::VecDeque;
 use crate::util;
-use crate::util::{decode_hash,read_merkle_proof,MerkleProof, hash_internal};
-
+use crate::util::{decode_hash, hash_internal, read_merkle_proof, MerkleProof};
+use std::collections::VecDeque;
 
 pub fn run(proof_file: &String, hash_base64: &str) {
     let merkle_proof = read_merkle_proof(proof_file);
     verify_merkle_proof(merkle_proof, hash_base64)
 }
 
-
 fn verify_merkle_proof(merkle_proof: Box<MerkleProof>, hash_base64: &str) {
     let root = decode_hash(hash_base64);
     let computed_root = compute_merkle_root_from_merkle_proof(merkle_proof);
     println!("computed_root: {:?}", computed_root);
     assert_eq!(computed_root, root);
+    println!("Merkle Proof is valid");
 }
 
 fn compute_merkle_root_from_merkle_proof(merkle_proof: Box<MerkleProof>) -> util::Hash32Bytes {
